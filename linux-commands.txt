@@ -1,0 +1,8 @@
+## Linux Performance Monitoring and Tuning
+# Commands ran within a VBox Mint Linux VM or the Win10 Dev Ubuntu Bash
+
+# Module Introduction
+cd /proc/
+less cpuinfo
+less cpuinfo | grep processor
+
