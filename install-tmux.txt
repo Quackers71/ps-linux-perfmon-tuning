@@ -1,0 +1,16 @@
+## Installation of tmux :-)
+# Ubuntu or Debian
+sudo apt install tmux
+
+# Centos or Fedora
+sudo yum install tmux
+
+# macOS
+brew install tmux
+
+# Starting your 1st Session
+tmux
+
+# See https://man.openbsd.org/OpenBSD-current/man1/tmux.1
+
+# More to follow.....
