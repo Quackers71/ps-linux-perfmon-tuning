@@ -10,3 +10,6 @@ less cpuinfo | grep processor
 export {http,https,ftp}_proxy="http://PROXY_SERVER:PORT"
 unset {http,https,ftp}_proxy
 
+# Simple method to block ping Command
+iptables -A INPUT --proto icmp -j DROP
+iptables -L -n -v 
