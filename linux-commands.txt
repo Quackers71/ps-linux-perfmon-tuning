@@ -6,3 +6,7 @@ cd /proc/
 less cpuinfo
 less cpuinfo | grep processor
 
+# Automate Proxy Server Settings In Linux
+export {http,https,ftp}_proxy="http://PROXY_SERVER:PORT"
+unset {http,https,ftp}_proxy
+
