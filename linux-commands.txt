@@ -70,6 +70,12 @@ TOP # will show ./stresser1.sh running the CPU around only 2% for this process
 
 killall stress*  # will terminate both processes
 
+## Controlling Processes Using cgroups
+# managing CPU Usage
+apt install cgroup-bin cgroup-lite cgroup-tools cgroupfs-mount libcgroup1
+# or yum install libcgroup libcgroup-tools
+
+
 
 
 # Proxy Server Settings to remove http etc
