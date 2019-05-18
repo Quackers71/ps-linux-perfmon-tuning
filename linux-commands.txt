@@ -26,6 +26,18 @@ killall  # Terminates processes based on application name
 
 
 
+
+
+# Proxy Server Settings to remove http etc
+export http_proxy="http://PROXY_SERVER:PORT"
+export https_proxy="https://PROXY_SERVER:PORT"
+export ftp_proxy="http://PROXY_SERVER:PORT"
+
+# Unset the Proxy Server Settings
+unset http_proxy
+unset https_proxy
+unset ftp_proxy
+
 # Automate Proxy Servzer Settings In Linux
 export {http,https,ftp}_proxy="http://PROXY_SERVER:PORT"
 unset {http,https,ftp}_proxy
