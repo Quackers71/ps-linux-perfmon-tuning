@@ -43,6 +43,32 @@ systemctl list-units | grep running
 systemctl status {service}
 systemctl disable {service}
 
+## Controlling Processes Using NICE
+# Balancing Process Needs
+
+# add this file
+- stresser.sh
+    #!/bin/bash
+    # stress CPU
+    while true; do true; done
+
+chmod +x stresser.sh
+./stresser.sh
+TOP  # On another console (tmux) will show the CPU running stresser.sh nearly up to 100%
+CTRL+C
+
+cp stresser.sh stresser1.sh
+./stresser.sh &
+./stresser1.sh
+TOP  # On another console (tmux) will show the CPU running stresser.sh & stresser1.sh nearly up to 50% each
+CTRL+C
+
+# now run :
+nice -19 ./stresser1.sh &
+TOP # will show ./stresser1.sh running the CPU around only 2% for this process
+    # and stresser.sh back up to 98% CPU
+
+killall stress*  # will terminate both processes
 
 
 
