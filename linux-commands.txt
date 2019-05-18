@@ -1,12 +1,32 @@
 ## Linux Performance Monitoring and Tuning
 # Commands ran within a VBox Mint Linux VM or the Win10 Dev Ubuntu Bash
 
-# Module Introduction
+## Module Introduction
 cd /proc/
 less cpuinfo
 less cpuinfo | grep processor
 
-# Automate Proxy Server Settings In Linux
+## Assessing Memory Usage
+# Memory Types
+# Physical Memory - Random Access Memory (RAM)
+# SWAP - Allocated disk space
+# Disk Caching - RAM capacity "borrowed" for application use
+less /proc/meminfo
+free -h # compare free to available
+vmstat
+vmstat 1 4  # 4x 1second intervals
+
+## Controlling Process Access to Resources
+# Deprecated Process - No longer fits business needs
+# Orphaned Application - Old experiment
+# Unauthorized Malware
+kill  # Terminates processes based on process ID
+killall  # Terminates processes based on application name
+
+
+
+
+# Automate Proxy Servzer Settings In Linux
 export {http,https,ftp}_proxy="http://PROXY_SERVER:PORT"
 unset {http,https,ftp}_proxy
 
