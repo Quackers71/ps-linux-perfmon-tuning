@@ -1,6 +1,8 @@
 ## Linux Performance Monitoring and Tuning
 # Commands ran within a VBox Mint Linux VM or the Win10 Dev Ubuntu Bash
 
+## Diagnosing and Managing CPU Load and Memory Issues
+
 ## Module Introduction
 cd /proc/
 less cpuinfo
@@ -75,23 +77,56 @@ killall stress*  # will terminate both processes
 apt install cgroup-bin cgroup-lite cgroup-tools cgroupfs-mount libcgroup1
 # or yum install libcgroup libcgroup-tools
 
+sudo su
+cgcreate -a robq -g cpu:testgroup
+cd /sys/fs/cgroup/cpu
+cat cpu.cfs_period_us
+cat cpu.cfs_quota_us
+cd testgroup
+cat cpu.cfs_quota_us
+-1
+cgset -r cpu.cfs_quota_us=25000 testgroup
+cat cpu.cfs_quota_us
+25000  # 25% of the value of the cpu.cfs_period_us file
+cd /home/robq
+cgexec -g cpu:testgroup ./stresser.sh &
+top # will show stresser.sh at 25% CPU
 
+cd /sys/fs/cgroup/memory
+ls
+cat memory.limit_in_bytes
+9223372036854771712
 
+cgcreate -a robq -g memory:limitmemusage
+cgset -r memory.limit_in_bytes=512m limitmemusage
+cgexec -g memory:limitmemusage /opt/google/chrome/chrome
+# chrome exe found using : ps aux | grep -i chrome
 
-# Proxy Server Settings to remove http etc
-export http_proxy="http://PROXY_SERVER:PORT"
-export https_proxy="https://PROXY_SERVER:PORT"
-export ftp_proxy="http://PROXY_SERVER:PORT"
+# or place this configuration into a bash script i.e.
+vim cgroup-script.sh
 
-# Unset the Proxy Server Settings
-unset http_proxy
-unset https_proxy
-unset ftp_proxy
+#!/bin/bash
+cgcreate -a robq -g cpu:testgroup
+cgset -r cpu.cfs_quota_us=25000 testgroup
+cgcreate -a robq -g memory:limitmemusage
+cgset -r memory.limit_in_bytes=512m limitmemusage
 
-# Automate Proxy Servzer Settings In Linux
-export {http,https,ftp}_proxy="http://PROXY_SERVER:PORT"
-unset {http,https,ftp}_proxy
+# :wq
+chmod +x cgroup-script.sh
+# add this entry to the /etc/anacrontab
+1       2       /home/robq/cgroup-script.sh
 
-# Simple method to block ping Command
-iptables -A INPUT --proto icmp -j DROP
-iptables -L -n -v 
+# Summary : 
+# Measure CPU and Memory status
+    - proc pseudo system
+    - uptime
+    - top
+    - free
+    - vmstat
+- Interpret metrics
+- Stop processes
+    - kill
+    - killall
+- Control processes
+    - nice
+    - cgroups
