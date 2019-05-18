@@ -23,7 +23,25 @@ vmstat 1 4  # 4x 1second intervals
 kill  # Terminates processes based on process ID
 killall  # Terminates processes based on application name
 
+yes > /dev/null &  # will run a process in the background
+yes > /dev/null &
+yes > /dev/null &
+ps
+ PID TTY        TIME CMD
+3133 pts/2  00:00:00 bash
+4410 pts/2  00:00:02 yes
+4411 pts/2  00:00:01 yes
+4412 pts/2  00:00:00 yes
+4413 pts/2  00:00:02 ps
 
+kill 4410
+# or use
+killall yes
+
+# see http://cheat.sh/systemctl
+systemctl list-units | grep running
+systemctl status {service}
+systemctl disable {service}
 
 
 
