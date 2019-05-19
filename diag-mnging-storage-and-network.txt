@@ -32,3 +32,18 @@ ls /var/log/journal/
 8733re39ui239239ab7y4ko5eurg
 less /etc/systemd/journald.conf
 
+## Working with Inodes
+# Inode - Is an object used by Unix Systems to identify the disk
+          location and attributes of files within a file system
+df -i
+find . -xdev -type f \
+  | cut -d "/" -f 2 \
+  | sort | uniq -c | sort -n
+# This will search Directories with the most Inodes
+
+# Remove Unneeded Software Packages
+# Debian / Ubuntu
+apt autoremove
+# RHEL / CentOS
+package-cleanup
+
