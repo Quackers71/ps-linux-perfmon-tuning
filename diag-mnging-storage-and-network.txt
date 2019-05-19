@@ -1,0 +1,34 @@
+## Diagnosing and Managing Storage and Network Issues
+# Module Introduction
+- Determine storage space status
+- Common symptoms
+- Design
+- Inodes
+
+- Identify heavy bandwidth users
+- Traffic Control (tc)
+
+# Accessing Storage Availability
+df -h
+lsblk
+# Mount a Storage Device
+sudo mount /dev/sdb1 /media/my-usb-mount
+
+## Addressing a Storage Crisis
+- Diagnosing a Storage Problem "Read-only file system"
+- Recovery - Make space
+- Consider running a live USB Session - mount the full drive
+  or use a GUI File Manager
+- Solving the Problem
+ - Upgrade hardware
+ - Adopt remote storage
+ - Reduce data production
+
+ls /var/log
+less /etc/logrotate.conf
+less /etc/logrotate.d/ufw (ufw firewall tool)
+
+ls /var/log/journal/
+8733re39ui239239ab7y4ko5eurg
+less /etc/systemd/journald.conf
+
