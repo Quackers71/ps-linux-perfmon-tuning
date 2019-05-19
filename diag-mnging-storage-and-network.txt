@@ -47,3 +47,16 @@ apt autoremove
 # RHEL / CentOS
 package-cleanup
 
+## Controlling Access to Network Bandwidth
+- Using monitoring tools
+- Identify heavy users
+- Throttling
+# Use iftop
+sudo apt install iftop
+sudo su
+ip a
+
+iftop -i enp0s3
+# test using tmux 2nd terminal and curl https://www.pluralsight.com
+
+nethogs enp0s3
