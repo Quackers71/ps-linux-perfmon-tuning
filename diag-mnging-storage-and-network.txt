@@ -60,3 +60,13 @@ iftop -i enp0s3
 # test using tmux 2nd terminal and curl https://www.pluralsight.com
 
 nethogs enp0s3
+
+## Traffic Control (tc)
+man tc
+ping www.google.co.uk
+CTRL+C
+tc -s qdisc ls dev enp0s3  # qdisc means queueing discipline
+# add a delay
+tc qdisc add dev enp0s3 root netem delay 100ms
+ping www.google.co.uk  # now showing a delay of 100ms
+tc qdisc del dev enp0s3 root  # reset config back to default
