@@ -1,0 +1,68 @@
+## Installing and Working with Monitoring Tools
+# Introduction to Linux Enterprise Monitoring Tools
+ - Collectd
+ - Nagios
+ - Munin
+ - nmon
+
+# Installing and Configuring a Standalone Collectd Server
+ - RRDtool as a DBMS used for Monitoring
+   https://en.wikipedia.org/wiki/RRDtool
+   - Install collectd
+   - Install Collectd-web
+   - Add remote servers
+sudo su
+apt install -y collectd python build-essential librrds-perl libjson-perl libhtml-parser-perl apache2
+a2enmod cgi cgid  # Allows Apache to manage visualitions
+cpan JSON  # to install a couple of Perl Modules
+cpan CGI
+vim /etc/apache2/sites-available/000-default.conf
+# Add the below (this enables ApacheCGI scripted handling from the web server end)
+# vim : syntax=apache ts=4 sw=4 sts=4 sr noet
+
+<Directory /var/www/html/collectd-web/cgi-bin>
+Options Indexes ExecCGI
+AllowOverride All
+AddHandler cgi-script .cgid
+Require all granted
+</Directory>
+
+ls /etc/apache2/
+less /etc/apache2/apache2.conf
+# look for 
+
+#Includes list of ports to listen Options
+Include ports.conf
+
+vim /etc/apache2/ports.conf
+# change this to
+
+Listen 0.0.0.0:80
+
+systemctl restart apache2
+
+less /etc/collectd/collectd.conf
+# You can enable plugins by uncommenting #LoadPlugin {plugins}
+# If you ammend the file make to :
+systemctl restart collectd
+
+cd /home/robq
+apt install git
+
+git clone https://github.com/httpdss/collectd-web.git
+cd collectd-web/cgi-bin/
+chmod +x graphdefs.cgi
+cd ..
+vim runserver.py
+# change
+
+else:
+    httpd = BaseHTTPServer.HTTPSerer(("0.0.0.0", PORT), Handler)
+    print "Collectd-web server running at http://%s:%s/" % ("0.0.0.0", PORT)
+httpd.serve_forever()
+
+# Now run :
+./runserver.py &
+
+# From GC
+http://10.02.15:8888
