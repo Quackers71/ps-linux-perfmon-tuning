@@ -1,0 +1,3 @@
+## Installing Nagios on Ubuntu
+# From the Linux Mint (Ubuntu) Server
+sudo apt install -y autoconf gcc libc6 make wget unzip apache2 php libapache2-mod-php7.0 libgd2-xpm-dev
