@@ -64,5 +64,16 @@ httpd.serve_forever()
 # Now run :
 ./runserver.py &
 
-# From GC
-http://10.02.15:8888
+# From Google Chrome
+http://10.02.15:8888  # collectd web ui
+
+## Added to Ubuntu Servers
+# collectd-client1 - with collectd install and re-configured
+# collectd-client2 - with collectd install and re-configured
+
+# Changed Network adaptors on all 3 Instances from NAT to Bridged
+# Servers now showing :
+
+Mint              - 192.168.1.20
+collectd-client2  - 192.168.1.19
+collectd-client1  - 192.168.1.18
