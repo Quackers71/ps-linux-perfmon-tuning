@@ -33,4 +33,22 @@ http://192.168.1.20/nagios
   - {password}
 
 ## Nagios: Plugin Setup
+# Installing Nagios Plugins
 
+apt install -y libmcrypt-dev make libssl-dev wget bc gawk dc build-essential snmp libnet-snmp-perl gettext
+wget --no-check-certificate -O nagios-plugins.tar.gz https://github.com/nagios-plugins/nagios-plugins/archive/release-2.2.1.tar.gz
+tar zxf nagios-plugins.tar.gz
+cd nagios-plugins-release-2.2.1/
+./tools/setup
+./configure
+make
+make install
+systemctl restart nagios
+systemctl restart apache2
+ls /usr/local/nagios/libexec  # Files should be showing
+# Refresh your Nagios Web UI 
+ - see localhost UP in Hosts
+ - in Services Statuses are now showing OK
+
+## Nagios: Notification Configuration
+# 
