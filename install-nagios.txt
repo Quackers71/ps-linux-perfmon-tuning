@@ -50,5 +50,43 @@ ls /usr/local/nagios/libexec  # Files should be showing
  - see localhost UP in Hosts
  - in Services Statuses are now showing OK
 
-## Nagios: Notification Configuration
-# 
+# Nagios: Notification Configuration
+
+apt -y install postfix mailutils
+vim /etc/postfix/main.cf 
+	inet_interfaces = localhost
+systemctl restart postfix
+
+vim /usr/local/nagios/etc/objects/contacts.cfg
+systemctl restart nagios
+
+# Nagios: NPRE (Nagios Remote Plugin Executor)
+
+[on server]
+wget --no-check-certificate -O nrpe.tar.gz https://github.com/NagiosEnterprises/nrpe/archive/nrpe-3.2.1.tar.gz
+tar zxf nrpe.tar.gz
+cd nrpe-***
+./configure --enable-command-args --with-ssl-lib=/usr/lib/x86_64-linux-gnu/
+make all
+make install
+make install-config
+sh -c "echo >> /etc/services"
+sh -c "sudo echo '# Nagios services' >> /etc/services"
+sh -c "sudo echo 'nrpe    5666/tcp' >> /etc/services"
+make install-init
+systemctl enable nrpe
+ 
+cd /usr/local/nagios/etc
+nano nagios.cfg
+
+	cfg_dir=/usr/local/nagios/etc/servers
+
+mkdir /usr/local/nagios/etc/servers  
+cd objects
+vim commands.cfg
+[add (to enable remote host checking):] 
+
+	define command{
+	        command_name check_nrpe
+	        command_line $USER1$/check_nrpe -H $HOSTADDRESS$ -c $ARG1$
+	}
