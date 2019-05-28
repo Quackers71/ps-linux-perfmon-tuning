@@ -26,3 +26,11 @@ htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
 systemctl restart apache2
 systemctl start nagios
 
+# Goto :
+http://192.168.1.20/nagios
+# Enter your Creds :
+  - nagiosadmin
+  - {password}
+
+## Nagios: Plugin Setup
+
