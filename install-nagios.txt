@@ -1,3 +1,28 @@
 ## Installing Nagios on Ubuntu
 # From the Linux Mint (Ubuntu) Server
+# Most if not all of these commands come from :
+http://bootstrap-it.com/linux-tuning/
+
 sudo apt install -y autoconf gcc libc6 make wget unzip apache2 php libapache2-mod-php7.0 libgd2-xpm-dev
+
+useradd nagios
+usermod -a -G nagios www-data
+wget -O nagioscore.tar.gz https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.3.4.tar.gz
+tar xzf nagioscore.tar.gz
+cd /nagioscore-nagios-4.3.4/
+./configure --with-httpd-conf=/etc/apache2/sites-enabled
+
+make all
+make install
+make install-init
+update-rc.d nagios defaults
+make install-commandmode
+make install-config
+make install-webconf
+a2enmod rewrite
+a2enmod cgi
+
+htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
+systemctl restart apache2
+systemctl start nagios
+
