@@ -94,7 +94,7 @@ vim commands.cfg
 
 [on client]
 useradd nagios
-apt install build-essential libgd2-xpm-dev openssl libssl-dev autoconf gcc libc6 libmcrypt-dev make unzip wget
+apt install build-essential libgd-dev openssl libssl-dev autoconf gcc libc6 libmcrypt-dev make unzip wget
 curl -L -O http://nagios-plugins.org/download/nagios-plugins-2.2.1.tar.gz
 	[http://nagios-plugins.org/downloads]
 tar zxf nagios-plugins-*.tar.gz
