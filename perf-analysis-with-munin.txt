@@ -1,0 +1,63 @@
+## Monitoring Tools: Performance Analysis with Munin
+# Installation on the [Server]
+sudo su
+apt install -y apache2 munin
+vim /etc/munin/munin.conf
+# Uncomment 
+
+    ## First our "normal" host.
+     [munin-node]
+           address 192.168.1.18
+
+systemctl start munin
+# Failed to start munin.service: Unit.service is masked
+
+/etc/init.d/munin restart
+systemctl restart apache2
+
+# from the [Node]
+sudo su
+apt install -y munin-node
+vim /etc/munin/munin-node.conf
+
+# replace the following
+allow ^192\.168\.1\20$
+allow ^::1$
+
+# Goto http://192.168.1.20/munin
+Forbidden 
+You don't have permission to access /munin/ on this server.
+Apache/2.4.29(Ubuntu) Server at 192.168.1.20 Port 80
+
+# back on the [Server]
+cd /var/cache/munin/www/  # You should see all the metrics files in here
+
+less /etc/munin/apache24.conf
+mv /etc/munin/apache24.conf /etc/munin/apache24.conf.backup
+vim /etc/munin/apache24.conf  # add the below to the New File
+
+Alias /munin /var/cache/munin/www
+	<Directory /var/cache/munin/www>
+	 # Require local
+	 Require all granted
+	 Options FollowSymLinks SymLinksIfOwnerMatch
+	 Options None
+	</Directory>
+
+	ScriptAlias /munin-cgi/munin-cgi-graph /usr/lib/munin/cgi/munin-cgi-graph
+	<Location /munin-cgi/munin-cgi-graph>
+	 # Require local
+	 Require all granted
+	 Options FollowSymLinks SymLinksIfOwnerMatch
+	 <IfModule mod_fcgid.c>
+	 SetHandler fcgid-script
+	 </IfModule>
+	 <IfModule !mod_fcgid.c>
+	 SetHandler cgi-script
+	 </IfModule>
+	</Location>
+
+# now restart the Services
+
+/etc/init.d/munin start 
+systemctl restart apache2
