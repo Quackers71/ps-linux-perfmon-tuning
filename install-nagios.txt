@@ -1,9 +1,15 @@
 ## Installing Nagios on Ubuntu
 # From the Linux Mint (Ubuntu) Server
+sudo apt install -y autoconf gcc libc6 make wget unzip apache2 php libapache2-mod-php7.0 libgd2-xpm-dev  # don't fully work!
+
+sudo su
+apt add-apt-repository ppa:ondrej/php
+apt-get update
+apt install -y autoconf gcc libc6 make wget unzip apache2 php libapache2-mod-php7.1 libgd-dev
 # Most if not all of these commands come from :
 http://bootstrap-it.com/linux-tuning/
 
-sudo apt install -y autoconf gcc libc6 make wget unzip apache2 php libapache2-mod-php7.0 libgd-dev
+sudo apt install -y autoconf gcc libc6 make wget unzip apache2 php libapache2-mod-php7.0 libgd2-xpm-dev
 
 useradd nagios
 usermod -a -G nagios www-data
@@ -90,67 +96,3 @@ vim commands.cfg
 	        command_name check_nrpe
 	        command_line $USER1$/check_nrpe -H $HOSTADDRESS$ -c $ARG1$
 	}
-
-
-[on client]
-useradd nagios
-apt install build-essential libgd-dev openssl libssl-dev autoconf gcc libc6 libmcrypt-dev make unzip wget
-curl -L -O http://nagios-plugins.org/download/nagios-plugins-2.2.1.tar.gz
-	[http://nagios-plugins.org/downloads]
-tar zxf nagios-plugins-*.tar.gz
-cd nagios-plugins-*
-./configure --with-nagios-user=nagios --with-nagios-group=nagios --with-openssl
-make
-make install
-
-cd /home/ubuntu
-curl -L -O https://github.com/NagiosEnterprises/nrpe/releases/download/nrpe-3.2.1/nrpe-3.2.1.tar.gz
-tar zxf nrpe-*.tar.gz
-cd nrpe-*
-./configure --enable-command-args --with-nagios-user=nagios --with-nagios-group=nagios --with-ssl=/usr/bin/openssl --with-ssl-lib=/usr/lib/x86_64-linux-gnu
-make all
-make install
-make install-config
-make install-init
-
-cd /usr/local/nagios/etc
-nano nrpe.cfg
-
-	server_address=192.168.1.27
-	allowed_hosts=127.0.0.1,::1,192.168.1.23
-	command[check_sda2]=/usr/local/nagios/libexec/check_disk -w 20% -c 10% -p /dev/sda2
-
-systemctl restart nrpe
-
-
-[on server]
-/usr/local/nagios/libexec/check_nrpe -H <remote_host_ip>
-
-nano /usr/local/nagios/etc/servers/nagios-client.cfg
-
-	define host {
-		use                             linux-server
-		host_name                       nagios-client
-		alias                           Client1
-		address                         192.168.1.27
-		max_check_attempts              5
-		check_period                    24x7
-		notification_interval           30
-		notification_period             24x7
-	}
-	define service {
-		use                             generic-service
-		host_name                       nagios-client
-		service_description             CPU load
-		check_command                   check_nrpe!check_load
-	}
-	define service {
-		use                             generic-service
-		host_name                       nagios-client
-		service_description             /dev/sda2 free space
-		check_command                   check_nrpe!check_sda2
-	}
-
-systemctl restart nagios
-systemctl enable nagios
-/usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg
